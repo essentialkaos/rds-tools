@@ -3,7 +3,7 @@
 ########################################################################################
 
 APP="RDS Tools"
-VER="1.0.0"
+VER="1.1.0"
 
 ########################################################################################
 
@@ -66,10 +66,14 @@ main() {
 cleanRDS() {
   local dir="${1:-/opt/redis-split}"
 
+  show "Wiping data in $dir..."
+
   stopSyncDaemon
   killSentinel
   killAllInstances
   wipeAllData "$dir"
+
+  show "All data successfully removed" $GREEN
 }
 
 fillInstance() {
@@ -93,7 +97,7 @@ fillInstance() {
     cat $tmp_file | redis-cli -x -p "$port" SET "${prefix}_${i}" &> /dev/null
   done
 
-  show "Complete!"
+  show "Complete!" $GREEN
 
   rm -f "$tmp_file"
 }
@@ -121,11 +125,11 @@ killAllInstances() {
 }
 
 wipeAllData() {
-  rm -rf "$1/meta/*"
-  rm -rf "$1/conf/*"
-  rm -rf "$1/pid/*"
-  rm -rf "$1/data/*"
-  rm -rf "$1/log/*"
+  rm -rf $1/meta/*
+  rm -rf $1/conf/*
+  rm -rf $1/pid/*
+  rm -rf $1/data/*
+  rm -rf $1/log/*
 }
 
 parseSize() {
