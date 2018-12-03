@@ -2,6 +2,13 @@
 
 Simple utility for working with Redis-Split.
 
+### Installation
+
+```bash
+curl -# -L -o rds-tools https://kaos.sh/rds-tools/rds-tools
+chmod +x rds-tools
+```
+
 ### Usage
 
 ```
