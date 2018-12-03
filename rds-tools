@@ -55,7 +55,7 @@ main() {
 
   shift
 
-  case $1 in
+  case $cmd in
     "clean") cleanRDS "$@" ;;
     "clear") cleanRDS "$@" ;;
     "fill")  fillInstance "$@" ;;
