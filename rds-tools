@@ -66,7 +66,7 @@ main() {
 cleanRDS() {
   local dir="${1:-/opt/redis-split}"
 
-  show "Wiping data in $dir..."
+  show "Wiping data in $dir…"
 
   stopSyncDaemon
   killSentinel
@@ -87,11 +87,11 @@ fillInstance() {
   prefix=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 12)
   tmp_file=$(mktemp)
 
-  show "Generating random data..."
+  show "Generating random data…"
 
   tr -dc A-Za-z0-9 </dev/urandom | head -c "$raw_size" > "$tmp_file"
 
-  show "Filling redis at port $port ($size ✕ $num)..."
+  show "Filling redis at port $port ($size ✕ $num)…"
 
   for i in $(seq 0 "$num") ; do
     cat $tmp_file | redis-cli -x -p "$port" SET "${prefix}_${i}" &> /dev/null
