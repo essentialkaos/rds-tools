@@ -1,0 +1,213 @@
+#!/usr/bin/env bash
+
+########################################################################################
+
+APP="RDS Tools"
+VER="1.0.0"
+
+########################################################################################
+
+NORM=0
+BOLD=1
+UNLN=4
+RED=31
+GREEN=32
+YELLOW=33
+BLUE=34
+MAG=35
+CYAN=36
+GREY=37
+DARK=90
+
+CL_NORM="\e[0m"
+CL_BOLD="\e[0;${BOLD};49m"
+CL_UNLN="\e[0;${UNLN};49m"
+CL_RED="\e[0;${RED};49m"
+CL_GREEN="\e[0;${GREEN};49m"
+CL_YELLOW="\e[0;${YELLOW};49m"
+CL_BLUE="\e[0;${BLUE};49m"
+CL_MAG="\e[0;${MAG};49m"
+CL_CYAN="\e[0;${CYAN};49m"
+CL_GREY="\e[0;${GREY};49m"
+CL_DARK="\e[0;${DARK};49m"
+CL_BL_RED="\e[1;${RED};49m"
+CL_BL_GREEN="\e[1;${GREEN};49m"
+CL_BL_YELLOW="\e[1;${YELLOW};49m"
+CL_BL_BLUE="\e[1;${BLUE};49m"
+CL_BL_MAG="\e[1;${MAG};49m"
+CL_BL_CYAN="\e[1;${CYAN};49m"
+CL_BL_GREY="\e[1;${GREY};49m"
+
+########################################################################################
+
+main() {
+  if [[ $# -eq 0 ]] ; then
+    usage
+    exit 0
+  fi
+
+  if [[ $1 == "--version" || $1 == "-v" ]] ; then
+    about
+    exit 0
+  fi
+
+  local cmd="$1"
+
+  shift
+
+  case $1 in
+    "clean") cleanRDS "$@" ;;
+    "clear") cleanRDS "$@" ;;
+    "fill")  fillInstance "$@" ;;
+    *)       error "Unknown command $1" ; exit 1 ;;
+  esac
+}
+
+cleanRDS() {
+  local dir="${1:-/opt/redis-split}"
+
+  stopSyncDaemon
+  killSentinel
+  killAllInstances
+  wipeAllData "$dir"
+}
+
+fillInstance() {
+  local port="$1"
+  local size="${2:-1mb}"
+  local num=${3:-100}
+
+  local raw_size prefix tmp_file
+
+  raw_size=$(parseSize "$size")
+  prefix=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 12)
+  tmp_file=$(mktemp)
+
+  show "Generating random data..."
+
+  tr -dc A-Za-z0-9 </dev/urandom | head -c "$raw_size" > "$tmp_file"
+
+  show "Filling redis at port $port ($size ✕ $num)..."
+
+  for i in $(seq 0 "$num") ; do
+    cat $tmp_file | redis-cli -x -p "$port" SET "${prefix}_${i}" &> /dev/null
+  done
+
+  show "Complete!"
+
+  rm -f "$tmp_file"
+}
+
+########################################################################################
+
+stopSyncDaemon() {
+  service rds-sync stop &> /dev/null
+}
+
+killSentinel() {
+  local pid
+
+  for pid in $(pgrep redis-sentinel) ; do
+    kill -9 "$pid"
+  done
+}
+
+killAllInstances() {
+  local pid
+
+  for pid in $(pgrep redis-server) ; do
+    kill -9 "$pid"
+  done
+}
+
+wipeAllData() {
+  rm -rf "$1/meta/*"
+  rm -rf "$1/conf/*"
+  rm -rf "$1/pid/*"
+  rm -rf "$1/data/*"
+  rm -rf "$1/log/*"
+}
+
+parseSize() {
+  local size="$1"
+  local mlt
+
+  size="${size// /}"
+  size=$(echo "$size" | tr "[:upper:]" "[:lower:]")
+
+  if [[ "$size" =~ "kb" ]] ; then
+    mlt=1024
+  elif [[ "$size" =~ "mb" ]] ; then
+    mlt=1048576
+  elif [[ "$size" =~ "gb" ]] ; then
+    mlt=1073741824
+  fi
+
+  size="${size//kb/}"
+  size="${size//mb/}"
+  size="${size//gb/}"
+
+  size=$(( size * mlt ))
+
+  echo "$size"
+}
+
+########################################################################################
+
+# Show message
+#
+# 1: Message (String)
+# 2: Message color (Number) [Optional]
+#
+# Code: No
+# Echo: No
+show() {
+  if [[ -n "$2" ]] ; then
+    echo -e "\e[${2}m${1}\e[0m"
+  else
+    echo -e "$*"
+  fi
+}
+
+# Print error message
+#
+# 1: Message (String)
+# 2: Message color (Number) [Optional]
+#
+# Code: No
+# Echo: No
+error() {
+  show "$@" $RED 1>&2
+}
+
+# Print usage info
+#
+# Code: No
+# Echo: No
+usage() {
+  show ""
+  show "${CL_BOLD}Usage:${CL_NORM} rds-tools ${CL_GREEN}{options}${CL_NORM} file..."
+  show ""
+  show "Commands" $BOLD
+  show ""
+  show "  ${CL_YELLOW}clean${CL_NORM} ${CL_DARK}dir${CL_NORM}             Kill all instances and clean all data"
+  show "  ${CL_YELLOW}fill${CL_NORM} port ${CL_DARK}size num${CL_NORM}    Fill redis instance with random data"
+  show ""
+}
+
+# Show info about version
+#
+# Code: No
+# Echo: No
+about() {
+  show ""
+  show "${CL_BL_CYAN}$APP${CL_NORM} ${CL_CYAN}$VER${CL_NORM} - Utility for working with Redis-Split"
+  show ""
+  show "Copyright (C) 2009-$(date +%Y) ESSENTIAL KAOS" $DARK
+  show "Essential Kaos Open Source License <https://essentialkaos.com/ekol>" $DARK
+  show ""
+}
+
+########################################################################################
+
+main $@
