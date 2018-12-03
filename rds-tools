@@ -190,8 +190,8 @@ usage() {
   show ""
   show "Commands" $BOLD
   show ""
-  show "  ${CL_YELLOW}clean${CL_NORM} ${CL_DARK}dir${CL_NORM}             Kill all instances and clean all data"
-  show "  ${CL_YELLOW}fill${CL_NORM} port ${CL_DARK}size num${CL_NORM}    Fill redis instance with random data"
+  show "  ${CL_YELLOW}clean${CL_NORM} ${CL_DARK}dir${CL_NORM}             Kills all instances and wipes all data"
+  show "  ${CL_YELLOW}fill${CL_NORM} port ${CL_DARK}size num${CL_NORM}    Fills Redis instance with random data"
   show ""
 }
 

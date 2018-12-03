@@ -9,8 +9,9 @@ Usage: rds-tools {options} file...
 
 Commands
 
-  clean dir             Kill all instances and clean all data
-  fill port size num    Fill redis instance with random data
+  clean dir             Kills all instances and wipes all data
+  fill port size num    Fills Redis instance with random data
+
 
 ```
 
