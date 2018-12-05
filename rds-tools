@@ -130,7 +130,7 @@ wipeAllData() {
   rm -rf $1/pid/*
   rm -rf $1/data/*
 
-  find "$1/log" -mindepth 1 -type d -exec rm -rf "{}" \;
+  find "$1/log" -mindepth 1 -type d -exec rm -rf "{}" \; &>/dev/null
 
   [[ -e "$1/log/sentinel.log" ]] && echo -n > "$1/log/sentinel.log"
   [[ -e "$1/log/redis-split.log" ]] && echo -n > "$1/log/redis-split.log"
