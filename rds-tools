@@ -129,7 +129,12 @@ wipeAllData() {
   rm -rf $1/conf/*
   rm -rf $1/pid/*
   rm -rf $1/data/*
-  rm -rf $1/log/*
+
+  find "$1/log" -type d -exec rm -rf "{}" \;
+
+  [[ -e "$1/log/sentinel.log" ]] && echo -n > "$1/log/sentinel.log"
+  [[ -e "$1/log/redis-split.log" ]] && echo -n > "$1/log/redis-split.log"
+  [[ -e "$1/log/redis-split-sync.log" ]] && echo -n > "$1/log/redis-split-sync.log"
 }
 
 parseSize() {
