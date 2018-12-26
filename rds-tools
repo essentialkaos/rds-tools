@@ -195,7 +195,7 @@ error() {
 # Echo: No
 usage() {
   show ""
-  show "${CL_BOLD}Usage:${CL_NORM} rds-tools ${CL_GREEN}{options}${CL_NORM} file..."
+  show "${CL_BOLD}Usage:${CL_NORM} rds-tools ${CL_YELLOW}{command}${CL_NORM} arguments…"
   show ""
   show "Commands" $BOLD
   show ""
