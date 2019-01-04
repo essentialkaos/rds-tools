@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1117,SC2034,SC2154
 
 ########################################################################################
 
@@ -94,7 +95,7 @@ fillInstance() {
   show "Filling redis at port $port ($size ✕ $num)…"
 
   for i in $(seq 0 "$num") ; do
-    cat $tmp_file | redis-cli -x -p "$port" SET "${prefix}_${i}" &> /dev/null
+    redis-cli -x -p "$port" SET "${prefix}_${i}" < "$tmp_file" &>/dev/null
   done
 
   show "Complete!" $GREEN
@@ -125,10 +126,10 @@ killAllInstances() {
 }
 
 wipeAllData() {
-  rm -rf $1/meta/*
-  rm -rf $1/conf/*
-  rm -rf $1/pid/*
-  rm -rf $1/data/*
+  rm -rf "$1"/meta/*
+  rm -rf "$1"/conf/*
+  rm -rf "$1"/pid/*
+  rm -rf "$1"/data/*
 
   find "$1/log" -mindepth 1 -type d -exec rm -rf "{}" \; &>/dev/null
 
@@ -219,4 +220,4 @@ about() {
 
 ########################################################################################
 
-main $@
+main "$@"
