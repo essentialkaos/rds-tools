@@ -7,7 +7,7 @@
   <a href="https://essentialkaos.com/ekol"><img src="https://gh.kaos.st/ekol.svg"></a>
 </p>
 
-Simple utility for working with Redis-Split.
+Simple utility for debugging and testing Redis-Split.
 
 ### Installation
 
