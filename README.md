@@ -3,7 +3,7 @@
 <p align="center"><a href="#installation">Installation</a> • <a href="#usage">Usage</a> • <a href="#license">License</a></p>
 
 <p align="center">
-  <a href="https://travis-ci.org/essentialkaos/rds-tools"><img src="https://travis-ci.org/essentialkaos/rds-tools.svg"></a>
+  <a href="https://travis-ci.com/essentialkaos/rds-tools"><img src="https://travis-ci.com/essentialkaos/rds-tools.svg"></a>
   <a href="https://essentialkaos.com/ekol"><img src="https://gh.kaos.st/ekol.svg"></a>
 </p>
 

@@ -48,8 +48,6 @@ CL_BL_GREY="\e[1;${GREY};49m"
 ########################################################################################
 
 main() {
-  trap errHandler ERR
-
   if [[ $# -eq 0 ]] ; then
     usage
     exit 0
@@ -224,18 +222,6 @@ about() {
   show "Copyright (C) 2009-$(date +%Y) ESSENTIAL KAOS" $DARK
   show "Essential Kaos Open Source License <https://essentialkaos.com/ekol>" $DARK
   show ""
-}
-
-# Handler for errors
-#
-# Code: No
-# Echo: No
-errHandler() {
-  while caller $((n++)) ; do
-    true
-  done
-
-  exit 1
 }
 
 ########################################################################################
