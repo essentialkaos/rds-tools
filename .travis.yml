@@ -1,9 +1,14 @@
 language: bash
 
+env:
+  global:
+    - SHELLCHECK_VERSION=0.7.1
+
 before_install:
-  - wget https://storage.googleapis.com/shellcheck/shellcheck-stable.linux.x86_64.tar.xz
-  - tar xf shellcheck-stable.linux.x86_64.tar.xz
-  - ./shellcheck-stable/shellcheck --version
+  - wget https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz
+  - tar xf shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz
+  - mv shellcheck-v${SHELLCHECK_VERSION} shellcheck-latest
+  - ./shellcheck-latest/shellcheck --version
 
 script:
- - bash -c 'shopt -s globstar; ./shellcheck-stable/shellcheck rds-tools'
+ - bash -c 'shopt -s globstar; ./shellcheck-latest/shellcheck rds-tools'
