@@ -10,7 +10,7 @@ fi
 ########################################################################################
 
 APP="RDS Tools"
-VER="1.1.1"
+VER="1.1.2"
 
 ########################################################################################
 
@@ -80,7 +80,7 @@ cleanRDS() {
   killAllInstances
   wipeAllData "$dir"
 
-  show "All data successfully removed" $GREEN
+  show "All data successfully removed!" $GREEN
 }
 
 fillInstance() {
@@ -98,7 +98,7 @@ fillInstance() {
 
   tr -dc A-Za-z0-9 </dev/urandom | head -c "$raw_size" > "$tmp_file"
 
-  show "Filling redis at port $port ($size ✕ $num)…"
+  show "Filling ${CL_BL_RED}Redis${CL_NORM} on $port ${CL_GREY}($size ✕ $num)${CL_NORM}…"
 
   for i in $(seq 0 "$num") ; do
     redis-cli -x -p "$port" SET "${prefix}_${i}" < "$tmp_file" &>/dev/null
