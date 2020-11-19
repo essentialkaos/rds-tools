@@ -1,7 +1,7 @@
 <p align="center"><a href="#readme"><img src="https://gh.kaos.st/rds-tools.svg"/></a></p>
 
 <p align="center">
-  <a href="https://travis-ci.com/essentialkaos/rds-tools"><img src="https://travis-ci.com/essentialkaos/rds-tools.svg"></a>
+  <a href="https://github.com/essentialkaos/rds-tools/actions"><img src="https://github.com/essentialkaos/rds-tools/workflows/CI/badge.svg" alt="GitHub Actions Status" /></a>
   <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
 </p>
 
