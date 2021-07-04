@@ -329,6 +329,14 @@ usage() {
   show "  ${CL_YELLOW}wipe${CL_NORM}              Kills all instances and wipes all data"
   show "  ${CL_YELLOW}fill${CL_NORM} id ${CL_DARK}size num${CL_NORM}  Fills Redis instance with random data"
   show ""
+  show "Examples" $BOLD
+  show ""
+  show "  rds-tools wipe"
+  show "  Stop sync daemon, kill all instances and delete all data" $DARK
+  show ""
+  show "  rds-tools 1 10mb 100"
+  show "  Create 100 keys with 10mb of data on instance with ID 1" $DARK
+  show ""
 }
 
 # Show info about version
@@ -337,7 +345,7 @@ usage() {
 # Echo: No
 about() {
   show ""
-  show "${CL_BL_CYAN}$APP${CL_NORM} ${CL_CYAN}$VER${CL_NORM} - Utility with helpers for Redis-Split"
+  show "${CL_BL_CYAN}$APP${CL_NORM} ${CL_CYAN}$VER${CL_NORM} - Simple utility for debugging and testing Redis-Split"
   show ""
   show "Copyright (C) 2009-$(date +%Y) ESSENTIAL KAOS" $DARK
   show "Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>" $DARK

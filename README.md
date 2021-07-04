@@ -21,13 +21,20 @@ curl -fL# -o rds-tools https://kaos.sh/rds-tools/rds-tools && chmod +x rds-tools
 ### Usage
 
 ```
-Usage: rds-tools {options} file...
+Usage: rds-tools {command} arguments…
 
 Commands
 
-  clean dir             Kills all instances and wipes all data
-  fill port size num    Fills Redis instance with random data
+  wipe              Kills all instances and wipes all data
+  fill id size num  Fills Redis instance with random data
 
+Examples
+
+  rds-tools wipe
+  Stop sync daemon, kill all instances and delete all data
+
+  rds-tools 1 10mb 100
+  Create 100 keys with 10mb of data on instance with ID 1
 ```
 
 ### License
