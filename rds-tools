@@ -10,7 +10,7 @@ fi
 ########################################################################################
 
 APP="RDS Tools"
-VER="1.1.2"
+VER="2.0.0"
 
 ########################################################################################
 
@@ -47,31 +47,67 @@ CL_BL_GREY="\e[1;${GREY};49m"
 
 ########################################################################################
 
+# Path to Redis-Split configuration file
+RDS_CONFIG="/etc/redis-split.knf"
+
+########################################################################################
+
+# Main func
+#
+# *: All arguments passed to utility
+#
+# Code: No
+# Echo: No
 main() {
-  if [[ $# -eq 0 ]] ; then
+  if [[ "$1" == "-h" || "$1" == "--help" || $# -eq 0 ]] ; then
     usage
     exit 0
   fi
 
-  if [[ $1 == "--version" || $1 == "-v" ]] ; then
+  if [[ "$1" == "--version" || "$1" == "-v" ]] ; then
     about
     exit 0
   fi
 
+  if ! isAppInstalled "knf" ; then
+    error "This app requires knf utility"
+    exit 0
+  fi
+
+  runCommand "$@"
+}
+
+# Runs command
+#
+# *: All arguments passed to utility
+#
+# Code: No
+# Echo: No
+runCommand() {
   local cmd="$1"
 
   shift
 
   case $cmd in
-    "clean") cleanRDS "$@" ;;
-    "clear") cleanRDS "$@" ;;
+    "wipe")  wipeData "$@" ;;
     "fill")  fillInstance "$@" ;;
     *)       error "Unknown command $1" ; exit 1 ;;
   esac
 }
 
-cleanRDS() {
-  local dir="${1:-/opt/redis-split}"
+# Remove all Redis-Split data
+#
+# Code: No
+# Echo: No
+wipeData() {
+  local dir
+
+  dir=$(getRDSDir)
+
+  if [[ -z "$dir" ]] ; then
+    error "Can't find Redis-Split main directory"
+    exit 1
+  fi
 
   show "Wiping data in $dir…"
 
@@ -83,12 +119,27 @@ cleanRDS() {
   show "All data successfully removed!" $GREEN
 }
 
+# Fills instance with random data
+#
+# 1: ID (Number)
+# 2: Size (String) [Optional]
+# 3: Number of objects (Number) [Optional]
+#
+# Code: No
+# Echo: No
 fillInstance() {
-  local port="$1"
+  local id="$1"
   local size="${2:-1mb}"
   local num=${3:-100}
 
-  local raw_size prefix tmp_file
+  local raw_size prefix tmp_file port
+
+  port=$(getInstancePort "$id")
+
+  if [[ -z "$port" || $port -lt 1000 ]] ; then
+    error "Can't find instance port"
+    exit 1
+  fi
 
   raw_size=$(parseSize "$size")
   prefix=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 12)
@@ -109,12 +160,51 @@ fillInstance() {
   rm -f "$tmp_file"
 }
 
+# Returns path to Redis-Split main directory
+#
+# Code: No
+# Echo: Path (String)
+getRDSDir() {
+  local dir
+
+  dir=$(knf $RDS_CONFIG "main:dir")
+
+  if [[ -d "$dir" ]] ; then
+    echo "$dir"
+  fi
+}
+
+# Returns Redis port of given instance
+#
+# 1: Instance ID (Number)
+#
+# Code: No
+# Echo: Port (Number)
+getInstancePort() {
+  local id="$1"
+
+  local start_port port
+
+  start_port=$(knf $RDS_CONFIG "redis:start-port")
+  port=$(( start_port + id ))
+
+  echo "$port"
+}
+
 ########################################################################################
 
+# Stops Redis-Split Syncing daemon
+#
+# Code: No
+# Echo: No
 stopSyncDaemon() {
   service rds-sync stop &> /dev/null
 }
 
+# Kills sentinel instance
+#
+# Code: No
+# Echo: No
 killSentinel() {
   local pid
 
@@ -123,6 +213,10 @@ killSentinel() {
   done
 }
 
+# Kills all Redis instances
+#
+# Code: No
+# Echo: No
 killAllInstances() {
   local pid
 
@@ -131,6 +225,12 @@ killAllInstances() {
   done
 }
 
+# Deletes all Redis-Split data
+#
+# 1: Redis-Split main dir (String)
+#
+# Code: No
+# Echo: No
 wipeAllData() {
   rm -rf "$1"/meta/*
   rm -rf "$1"/conf/*
@@ -144,6 +244,12 @@ wipeAllData() {
   [[ -e "$1/log/redis-split-sync.log" ]] && echo -n > "$1/log/redis-split-sync.log"
 }
 
+# Parses size
+#
+# 1: Size (String)
+#
+# Code: No
+# Echo: Size in bytes (Number)
 parseSize() {
   local size="$1"
   local mlt
@@ -166,6 +272,20 @@ parseSize() {
   size=$(( size * mlt ))
 
   echo "$size"
+}
+
+# Checks if app (binary) is installed
+#
+# 1: Binary name (String)
+#
+# Code: Yes
+# Echo: No
+isAppInstalled() {
+  if ! type -P "$1" &>/dev/null ; then
+    return 1
+  fi
+
+  return 0
 }
 
 ########################################################################################
@@ -206,8 +326,8 @@ usage() {
   show ""
   show "Commands" $BOLD
   show ""
-  show "  ${CL_YELLOW}clean${CL_NORM} ${CL_DARK}dir${CL_NORM}             Kills all instances and wipes all data"
-  show "  ${CL_YELLOW}fill${CL_NORM} port ${CL_DARK}size num${CL_NORM}    Fills Redis instance with random data"
+  show "  ${CL_YELLOW}wipe${CL_NORM}              Kills all instances and wipes all data"
+  show "  ${CL_YELLOW}fill${CL_NORM} id ${CL_DARK}size num${CL_NORM}  Fills Redis instance with random data"
   show ""
 }
 
@@ -217,7 +337,7 @@ usage() {
 # Echo: No
 about() {
   show ""
-  show "${CL_BL_CYAN}$APP${CL_NORM} ${CL_CYAN}$VER${CL_NORM} - Utility for working with Redis-Split"
+  show "${CL_BL_CYAN}$APP${CL_NORM} ${CL_CYAN}$VER${CL_NORM} - Utility with helpers for Redis-Split"
   show ""
   show "Copyright (C) 2009-$(date +%Y) ESSENTIAL KAOS" $DARK
   show "Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>" $DARK

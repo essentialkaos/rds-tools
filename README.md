@@ -14,7 +14,8 @@ Simple utility for debugging and testing Redis-Split.
 ### Installation
 
 ```bash
-curl -fL# -o rds-tools https://kaos.sh/rds-tools/rds-tools && chmod +x rds-tools
+bash <(curl -fsSL https://apps.kaos.st/get) knf && sudo mv knf /usr/bin/
+curl -fL# -o rds-tools https://kaos.sh/rds-tools/rds-tools && chmod +x rds-tools && sudo mv rds-tools /usr/bin/
 ```
 
 ### Usage
