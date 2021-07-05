@@ -10,7 +10,7 @@ fi
 ########################################################################################
 
 APP="RDS Tools"
-VER="2.0.0"
+VER="2.1.0"
 
 ########################################################################################
 
@@ -89,8 +89,9 @@ runCommand() {
   shift
 
   case $cmd in
-    "wipe")  wipeData "$@" ;;
-    "fill")  fillInstance "$@" ;;
+    "wipe")      wipeData "$@" ;;
+    "fill")      fillInstance "$@" ;;
+    "reinstall") reinstallAll "$@" ;;
     *)       error "Unknown command $1" ; exit 1 ;;
   esac
 }
@@ -158,6 +159,15 @@ fillInstance() {
   show "Complete!" $GREEN
 
   rm -f "$tmp_file"
+}
+
+# Reinstall the latest version of all Redis-Split components
+#
+# Code: No
+# Echo: No
+reinstallAll() {
+  sudo yum -y --enablerepo=kaos-testing clean expire-cache && \
+  sudo yum -y --enablerepo=kaos-testing reinstall 'redis-split*'
 }
 
 # Returns path to Redis-Split main directory
@@ -326,6 +336,7 @@ usage() {
   show ""
   show "Commands" $BOLD
   show ""
+  show "  ${CL_YELLOW}reinstall${CL_NORM}         Reinstall all Redis-Split components"
   show "  ${CL_YELLOW}wipe${CL_NORM}              Kills all instances and wipes all data"
   show "  ${CL_YELLOW}fill${CL_NORM} id ${CL_DARK}size num${CL_NORM}  Fills Redis instance with random data"
   show ""
