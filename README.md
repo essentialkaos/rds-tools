@@ -25,6 +25,7 @@ Usage: rds-tools {command} arguments…
 
 Commands
 
+  reinstall         Reinstall all Redis-Split components
   wipe              Kills all instances and wipes all data
   fill id size num  Fills Redis instance with random data
 
