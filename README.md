@@ -34,7 +34,7 @@ Examples
   rds-tools wipe
   Stop sync daemon, kill all instances and delete all data
 
-  rds-tools 1 10mb 100
+  rds-tools fill 1 10mb 100
   Create 100 keys with 10mb of data on instance with ID 1
 ```
 
