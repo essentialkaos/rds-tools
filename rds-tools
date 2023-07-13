@@ -345,7 +345,7 @@ usage() {
   show "  rds-tools wipe"
   show "  Stop sync daemon, kill all instances and delete all data" $DARK
   show ""
-  show "  rds-tools 1 10mb 100"
+  show "  rds-tools fill 1 10mb 100"
   show "  Create 100 keys with 10mb of data on instance with ID 1" $DARK
   show ""
 }
