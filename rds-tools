@@ -10,7 +10,7 @@ fi
 ########################################################################################
 
 APP="RDS Tools"
-VER="2.1.0"
+VER="2.2.0"
 
 ########################################################################################
 
@@ -47,8 +47,8 @@ CL_BL_GREY="\e[1;${GREY};49m"
 
 ########################################################################################
 
-# Path to Redis-Split configuration file
-RDS_CONFIG="/etc/redis-split.knf"
+# Path to RDS configuration file
+RDS_CONFIG="/etc/rds.knf"
 
 ########################################################################################
 
@@ -96,7 +96,7 @@ runCommand() {
   esac
 }
 
-# Remove all Redis-Split data
+# Remove all RDS data
 #
 # Code: No
 # Echo: No
@@ -106,7 +106,7 @@ wipeData() {
   dir=$(getRDSDir)
 
   if [[ -z "$dir" ]] ; then
-    error "Can't find Redis-Split main directory"
+    error "Can't find RDS main directory"
     exit 1
   fi
 
@@ -161,16 +161,16 @@ fillInstance() {
   rm -f "$tmp_file"
 }
 
-# Reinstall the latest version of all Redis-Split components
+# Reinstall the latest version of all RDS components
 #
 # Code: No
 # Echo: No
 reinstallAll() {
   sudo yum -y --enablerepo=kaos-testing clean expire-cache && \
-  sudo yum -y --enablerepo=kaos-testing reinstall 'redis-split*'
+  sudo yum -y --enablerepo=kaos-testing reinstall 'rds*'
 }
 
-# Returns path to Redis-Split main directory
+# Returns path to RDS main directory
 #
 # Code: No
 # Echo: Path (String)
@@ -203,7 +203,7 @@ getInstancePort() {
 
 ########################################################################################
 
-# Stops Redis-Split Syncing daemon
+# Stops RDS Syncing daemon
 #
 # Code: No
 # Echo: No
@@ -235,9 +235,9 @@ killAllInstances() {
   done
 }
 
-# Deletes all Redis-Split data
+# Deletes all RDS data
 #
-# 1: Redis-Split main dir (String)
+# 1: RDS main dir (String)
 #
 # Code: No
 # Echo: No
@@ -250,8 +250,8 @@ wipeAllData() {
   find "$1/log" -mindepth 1 -type d -exec rm -rf "{}" \; &>/dev/null
 
   [[ -e "$1/log/sentinel.log" ]] && echo -n > "$1/log/sentinel.log"
-  [[ -e "$1/log/redis-split.log" ]] && echo -n > "$1/log/redis-split.log"
-  [[ -e "$1/log/redis-split-sync.log" ]] && echo -n > "$1/log/redis-split-sync.log"
+  [[ -e "$1/log/rds.log" ]] && echo -n > "$1/log/rds.log"
+  [[ -e "$1/log/rds-sync.log" ]] && echo -n > "$1/log/rds-sync.log"
 }
 
 # Parses size
@@ -336,7 +336,7 @@ usage() {
   show ""
   show "Commands" $BOLD
   show ""
-  show "  ${CL_YELLOW}reinstall${CL_NORM}         Reinstall all Redis-Split components"
+  show "  ${CL_YELLOW}reinstall${CL_NORM}         Reinstall all RDS components"
   show "  ${CL_YELLOW}wipe${CL_NORM}              Kills all instances and wipes all data"
   show "  ${CL_YELLOW}fill${CL_NORM} id ${CL_DARK}size num${CL_NORM}  Fills Redis instance with random data"
   show ""
@@ -356,7 +356,7 @@ usage() {
 # Echo: No
 about() {
   show ""
-  show "${CL_BL_CYAN}$APP${CL_NORM} ${CL_CYAN}$VER${CL_NORM} - Simple utility for debugging and testing Redis-Split"
+  show "${CL_BL_CYAN}$APP${CL_NORM} ${CL_CYAN}$VER${CL_NORM} - Simple utility for debugging and testing RDS"
   show ""
   show "Copyright (C) 2009-$(date +%Y) ESSENTIAL KAOS" $DARK
   show "Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>" $DARK
