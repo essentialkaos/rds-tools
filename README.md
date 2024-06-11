@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/essentialkaos/rds-tools/actions"><img src="https://github.com/essentialkaos/rds-tools/workflows/CI/badge.svg" alt="GitHub Actions Status" /></a>
-  <a href="#license"><img src=".github/images/license.svg"/>/a>
+  <a href="#license"><img src=".github/images/license.svg"/></a>
 </p>
 
 <p align="center"><a href="#installation">Installation</a> • <a href="#usage">Usage</a> • <a href="#license">License</a></p>
