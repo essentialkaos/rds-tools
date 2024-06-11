@@ -1,8 +1,8 @@
-<p align="center"><a href="#readme"><img src="https://gh.kaos.st/rds-tools.svg"/></a></p>
+<p align="center"><a href="#readme"><img src=".github/images/card.svg"/></a></p>
 
 <p align="center">
   <a href="https://github.com/essentialkaos/rds-tools/actions"><img src="https://github.com/essentialkaos/rds-tools/workflows/CI/badge.svg" alt="GitHub Actions Status" /></a>
-  <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
+  <a href="#license"><img src=".github/images/license.svg"/>/a>
 </p>
 
 <p align="center"><a href="#installation">Installation</a> • <a href="#usage">Usage</a> • <a href="#license">License</a></p>
@@ -20,23 +20,7 @@ curl -fL# -o rds-tools https://kaos.sh/rds-tools/rds-tools && chmod +x rds-tools
 
 ### Usage
 
-```
-Usage: rds-tools {command} arguments…
-
-Commands
-
-  reinstall         Reinstall all Redis-Split components
-  wipe              Kills all instances and wipes all data
-  fill id size num  Fills Redis instance with random data
-
-Examples
-
-  rds-tools wipe
-  Stop sync daemon, kill all instances and delete all data
-
-  rds-tools fill 1 10mb 100
-  Create 100 keys with 10mb of data on instance with ID 1
-```
+<img src=".github/images/usage.svg"/>
 
 ### License
 
